@@ -19,3 +19,13 @@ cd sawtooth-rest-api-proxy
 
 node index.js
 ```
+
+### Use pm2 to start proxy as a long-running process
+
+```bash
+npm install -g pm2
+
+cd sawtooth-rest-api-proxy
+
+pm2 start index.js
+```
