@@ -12,6 +12,8 @@ cd sawtooth-rest-api-proxy
 npm install
 ```
 
+Edit the values in `config.js` to reflect the URL of your Sawtooth REST API, and the port that you want the proxy to run on.
+
 ## Usage
 
 ```bash
