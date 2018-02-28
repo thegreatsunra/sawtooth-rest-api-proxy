@@ -2,7 +2,12 @@ const express = require('express')
 const httpProxy = require('http-proxy')
 
 const app = express()
-const apiProxy = httpProxy.createProxyServer()
+const apiProxy = httpProxy.createProxyServer({
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+  }
+})
 
 const restApi = 'http://localhost:8008'
 const port = 8888
