@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.all('/*', (req, res) => {
+app.all('*', (req, res) => {
   console.log(`Redirecting request to ${config.apiUrl}`)
   apiProxy.web(req, res, {
     target: config.apiUrl
