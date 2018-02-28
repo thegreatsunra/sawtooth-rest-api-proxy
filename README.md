@@ -12,3 +12,10 @@ cd sawtooth-rest-api-proxy
 npm install
 ```
 
+## Usage
+
+```bash
+cd sawtooth-rest-api-proxy
+
+node index.js
+```
