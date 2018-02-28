@@ -4,7 +4,9 @@ const httpProxy = require('http-proxy')
 const config = require('./config')
 
 const app = express()
-const apiProxy = httpProxy.createProxyServer()
+const apiProxy = httpProxy.createProxyServer({
+  xfwd: true
+})
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
