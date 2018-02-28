@@ -2,19 +2,22 @@ const express = require('express')
 const httpProxy = require('http-proxy')
 
 const app = express()
-const apiProxy = httpProxy.createProxyServer({
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
-  }
-})
+const apiProxy = httpProxy.createProxyServer()
 
 const restApi = 'http://localhost:8008'
 const port = 8888
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
+
 app.all('/*', (req, res) => {
   console.log(`redirecting request to ${restApi}`)
-  apiProxy.web(req, res, { target: restApi })
+  apiProxy.web(req, res, {
+    target: restApi
+  })
 })
 
 app.listen(port)
