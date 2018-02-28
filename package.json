@@ -24,6 +24,8 @@
     "npm": ">= 5.0.3"
   },
   "dependencies": {
+    "express": "^4.16.2",
+    "http-proxy": "^1.16.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.2",
