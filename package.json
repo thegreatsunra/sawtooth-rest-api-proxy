@@ -1,0 +1,33 @@
+{
+  "name": "sawtooth-rest-api-proxy",
+  "description": "Reverse proxy for Sawtooth REST API using Express",
+  "version": "0.0.0",
+  "homepage": "https://github.com/thegreatsunra/sawtooth-rest-api-proxy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thegreatsunra/sawtooth-rest-api-proxy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thegreatsunra/sawtooth-rest-api-proxy/issues"
+  },
+  "author": "Dane Petersen <thegreatsunra@gmail.com>",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Dane Petersen",
+      "email": "thegreatsunra@gmail.com",
+      "url": "https://github.com/thegreatsunra"
+    }
+  ],
+  "engines": {
+    "node": ">= 8.1.0",
+    "npm": ">= 5.0.3"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "main": "index.js",
+  "scripts": {
+  }
+}
