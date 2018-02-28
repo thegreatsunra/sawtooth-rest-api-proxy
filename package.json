@@ -1,0 +1,44 @@
+{
+  "name": "sawtooth-rest-api-proxy",
+  "description": "Reverse proxy for Sawtooth REST API using Express",
+  "version": "0.1.0",
+  "homepage": "https://github.com/thegreatsunra/sawtooth-rest-api-proxy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thegreatsunra/sawtooth-rest-api-proxy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thegreatsunra/sawtooth-rest-api-proxy/issues"
+  },
+  "author": "Dane Petersen <thegreatsunra@gmail.com>",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Dane Petersen",
+      "email": "thegreatsunra@gmail.com",
+      "url": "https://github.com/thegreatsunra"
+    }
+  ],
+  "engines": {
+    "node": ">= 8.1.0",
+    "npm": ">= 5.0.3"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "http-proxy": "^1.16.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.18.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^6.0.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ext .js *.config* src --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
