@@ -37,5 +37,6 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ext .js *.config* src --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
