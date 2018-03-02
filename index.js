@@ -4,7 +4,9 @@ const httpProxy = require('http-proxy')
 const config = require('./config')
 
 const app = express()
-const apiProxy = httpProxy.createProxyServer()
+const apiProxy = httpProxy.createProxyServer({
+  xfwd: true
+})
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -12,8 +14,8 @@ app.use((req, res, next) => {
   next()
 })
 
-app.all('/*', (req, res) => {
-  console.log(`redirecting request to ${config.apiUrl}`)
+app.all('*', (req, res) => {
+  console.log(`Redirecting request to ${config.apiUrl}`)
   apiProxy.web(req, res, {
     target: config.apiUrl
   })
@@ -21,5 +23,5 @@ app.all('/*', (req, res) => {
 
 app.listen(config.proxyPort)
 
-console.log(`Starting proxy server at port ${config.proxyPort}`)
-console.log(`Listening for requests at ${config.apiUrl}`)
+console.log(`Listening for requests at ${config.proxyPort}`)
+console.log(`and forwarding them to ${config.apiUrl}`)
