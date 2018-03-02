@@ -12,7 +12,11 @@ cd sawtooth-rest-api-proxy
 npm install
 ```
 
-Edit the values in `config.js` to reflect the URL of your Sawtooth REST API, and the port that you want the proxy to run on.
+Edit the values in `config.js` to reflect the URL of your Sawtooth REST API, and the port that you want the proxy to run on. 
+
+By default, the proxy listens for requests at port `8888` on the current server and forwards them to port `http://localhost:8008`. Using `localhost` for the Sawtooth REST API works for our purposes, but depending on your architecture you may need to specify an IP address.
+
+Responses from the Sawtooth REST API are given generous `Access-Control-Allow-Origin` headers by the proxy, and then sent along to the requesting client.
 
 ## Usage
 
