@@ -23,5 +23,5 @@ app.all('*', (req, res) => {
 
 app.listen(config.proxyPort)
 
-console.log(`Starting proxy server at port ${config.proxyPort}`)
-console.log(`Listening for requests at ${config.apiUrl}`)
+console.log(`Listening for requests at ${config.proxyPort}`)
+console.log(`and forwarding them to ${config.apiUrl}`)
