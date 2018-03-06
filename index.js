@@ -19,8 +19,19 @@ const proxy = httpProxy.createServer({
 
 proxy.listen(config.proxy.port)
 
-proxy.on('proxyReq', (proxyReq) => {
-  proxyReq.setHeader('Access-Control-Allow-Origin', '*')
-  proxyReq.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-
+proxy.on('proxyRes', (proxyRes) => {
+  console.log('Sent response from proxy')
+  proxyRes.setHeader('Access-Control-Allow-Origin', '*')
+  proxyRes.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 })
+
+proxy.on('error', (error) => {
+  console.log('error', error)
+})
+
+proxy.on('proxyReq', () => {
+  console.log('Received request at proxy')
+})
+
+console.log(`Listening for requests at :${config.proxy.port}`)
+console.log(`and forwarding them to ${config.api.host}:${config.api.port}`)
