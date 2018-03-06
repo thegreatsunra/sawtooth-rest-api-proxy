@@ -1,36 +1,26 @@
-const express = require('express')
-const fs = require('fs')
-const helmet = require('helmet')
-const httpProxy = require('http-proxy')
 const path = require('path')
+const fs = require('fs')
+const httpProxy = require('http-proxy')
 
 const config = require('./config')
 
-const app = express()
-const apiProxy = httpProxy.createProxyServer({
+const proxy = httpProxy.createServer({
   xfwd: true,
+  target: {
+    host: config.api.host,
+    port: config.api.port
+  },
   ssl: {
-    key: fs.readFileSync(path.resolve(__dirname, './sslcert/privkey.pem'), 'utf8'),
-    cert: fs.readFileSync(path.resolve(__dirname, './sslcert/fullchain.pem'), 'utf8')
-  }
+    key: fs.readFileSync(path.join('./sslcert', 'privkey.pem'), 'utf8'),
+    cert: fs.readFileSync(path.join('./sslcert', 'fullchain.pem'), 'utf8')
+  },
+  secure: true
 })
 
-app.use(helmet)
+proxy.listen(config.proxy.port)
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
+proxy.on('proxyReq', (proxyReq) => {
+  proxyReq.setHeader('Access-Control-Allow-Origin', '*')
+  proxyReq.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+
 })
-
-app.all('*', (req, res) => {
-  console.log(`Redirecting request to ${config.apiUrl}`)
-  apiProxy.web(req, res, {
-    target: config.apiUrl
-  })
-})
-
-app.listen(config.proxyPort)
-
-console.log(`Listening for requests at ${config.proxyPort}`)
-console.log(`and forwarding them to ${config.apiUrl}`)
