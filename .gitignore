@@ -1,5 +1,7 @@
 !.gitkeep
 
+sslcert/**.pem
+
 ### Node ###
 
 # Logs

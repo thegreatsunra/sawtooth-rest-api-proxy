@@ -1,12 +1,18 @@
 const express = require('express')
+const fs = require('fs')
 const helmet = require('helmet')
 const httpProxy = require('http-proxy')
+const path = require('path')
 
 const config = require('./config')
 
 const app = express()
 const apiProxy = httpProxy.createProxyServer({
-  xfwd: true
+  xfwd: true,
+  ssl: {
+    key: fs.readFileSync(path.resolve(__dirname, './sslcert/privkey.pem'), 'utf8'),
+    cert: fs.readFileSync(path.resolve(__dirname, './sslcert/fullchain.pem'), 'utf8')
+  }
 })
 
 app.use(helmet)
