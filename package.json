@@ -1,7 +1,7 @@
 {
   "name": "sawtooth-rest-api-proxy",
   "description": "Reverse proxy for Sawtooth REST API using Express",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "homepage": "https://github.com/thegreatsunra/sawtooth-rest-api-proxy",
   "repository": {
     "type": "git",
