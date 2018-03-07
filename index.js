@@ -1,12 +1,15 @@
 const express = require('express')
-const httpProxy = require('http-proxy')
+const expressProxy = require('express-http-proxy')
+const fs = require('fs')
+const helmet = require('helmet')
+const https = require('https')
+const path = require('path')
 
 const config = require('./config')
 
 const app = express()
-const apiProxy = httpProxy.createProxyServer({
-  xfwd: true
-})
+
+app.use(helmet())
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -14,14 +17,30 @@ app.use((req, res, next) => {
   next()
 })
 
-app.all('*', (req, res) => {
-  console.log(`Redirecting request to ${config.apiUrl}`)
-  apiProxy.web(req, res, {
-    target: config.apiUrl
+app.use(express.static('public'))
+
+app.use('/', expressProxy(`${config.api.host}:${config.api.port}`, {
+  filter: (req, res) => {
+    return proxyRequest(req.path, config.api.endpoints)
+  }
+}))
+
+app.listen(config.proxy.port)
+
+https.createServer({
+  cert: fs.readFileSync(path.resolve(__dirname, config.proxy.sslCert)),
+  key: fs.readFileSync(path.resolve(__dirname, config.proxy.sslKey))
+}, app).listen(config.proxy.securePort)
+
+console.log(`Listening for requests at port ${config.proxy.securePort} ...`)
+console.log(`... and forwarding them to ${config.api.host}:${config.api.port}`)
+
+const proxyRequest = (path, endpoints) => {
+  let match = false
+  endpoints.forEach((endpoint) => {
+    if (path.includes(endpoint)) {
+      match = true
+    }
   })
-})
-
-app.listen(config.proxyPort)
-
-console.log(`Listening for requests at ${config.proxyPort}`)
-console.log(`and forwarding them to ${config.apiUrl}`)
+  return match
+}

@@ -1,6 +1,25 @@
 const config = {
-  apiUrl: 'http://localhost:8008',
-  proxyPort: 8888
+  api: {
+    host: 'localhost',
+    port: 8008,
+    endpoints: [
+      'batches',
+      'batch_statuses',
+      'blocks',
+      'peers',
+      'receipts',
+      'state',
+      'status',
+      'transactions'
+    ]
+  },
+  proxy: {
+    initPort: 80,
+    port: 8887,
+    securePort: 8888,
+    sslCert: './sslcert/fullchain.pem',
+    sslKey: './sslcert/privkey.pem'
+  }
 }
 
 module.exports = config
