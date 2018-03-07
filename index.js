@@ -1,11 +1,13 @@
 const express = require('express')
 const expressProxy = require('express-http-proxy')
 const fs = require('fs')
+const helmet = require('helmet')
 
 const config = require('./config')
 
 const app = express()
 
+app.use(helmet())
 
 })
 
