@@ -14,7 +14,7 @@ const config = {
     ]
   },
   proxy: {
-    initPort: 8888,
+    initPort: 80,
     port: 8887,
     securePort: 8888,
     sslCert: './sslcert/fullchain.pem',
