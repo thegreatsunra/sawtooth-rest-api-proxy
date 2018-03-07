@@ -36,21 +36,21 @@ cd sawtooth-rest-api-proxy
 sudo node init.js
 ```
 
-3) **Keep that script running.** Now, open a _second_ SSH session on your server and install certbot:
+5) **Keep that script running.** Now, open a _second_ SSH session on your server and install certbot:
 
 ```bash
 sudo add-apt-repository -y ppa:certbot/certbot && apt update -yq && apt install -yq certbot
 ```
 
-4) Issue an SSL certificate for your server, using the init script's Express server to complete certbot's round-trip verification:
+6) Issue an SSL certificate for your server, using the init script's Express server to complete certbot's round-trip verification:
 
 ```
 cd ~/sawtooth-rest-api-proxy && sudo certbot certonly --agree-tos --noninteractive --email __YOUR_EMAIL@DOMAIN.TLD__ --webroot -w ./public -d __YOUR_SERVER_HOSTNAME__
 ```
 
-5) If the above command was successful, switch back to your _first_ SSH session and stop the `init.js` script via CTRL+C
+7) If the above command was successful, switch back to your _first_ SSH session and stop the `init.js` script via CTRL+C
 
-6) Run the following commands to put your SSL certificate and key in a place where your proxy app has permission to run it (TODO: Make this smarter and better and more secure)
+8) Run the following commands to put your SSL certificate and key in a place where your proxy app has permission to run it (TODO: Make this smarter and better and more secure)
 
 ```bash
 ## Copy your SSL key and certificate into your rest api project folder
@@ -61,9 +61,9 @@ sudo cp /etc/letsencrypt/live/__YOUR_SERVER_HOSTNAME__/fullchain.pem ~/sawtooth-
 sudo chown sawtooth:sawtooth ~/sawtooth-rest-api-proxy/sslcert/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem && chmod 755 ~/sawtooth-rest-api-proxy/sslcert/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem
 ```
 
-7) TODO: Set up a cron job to run certbot and renew certificates every 90 days
+9) TODO: Set up a cron job to run certbot and renew certificates every 90 days
 
-8) TODO: Set up a cron job to copy renewed certificate and key files to the proxy app folder
+10) TODO: Set up a cron job to copy renewed certificate and key files to the proxy app folder
 
 ## Configuration
 
