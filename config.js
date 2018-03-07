@@ -1,7 +1,17 @@
 const config = {
   api: {
     host: 'localhost',
-    port: 8008
+    port: 8008,
+    endpoints: [
+      'batches',
+      'batch_statuses',
+      'blocks',
+      'peers',
+      'receipts',
+      'state',
+      'status',
+      'transactions'
+    ]
   },
   proxy: {
     port: 8887,

@@ -16,6 +16,9 @@ app.use(helmet())
 app.use(express.static('public'))
 
 app.use('/', expressProxy(`${config.api.host}:${config.api.port}`, {
+  filter: (req, res) => {
+    return proxyRequest(req.path, config.api.endpoints)
+  }
 }))
 
 app.listen(config.proxy.port)
@@ -28,3 +31,12 @@ https.createServer({
 console.log(`Listening for requests at port ${config.proxy.securePort} ...`)
 console.log(`... and forwarding them to ${config.api.host}:${config.api.port}`)
 
+const proxyRequest = (path, endpoints) => {
+  let match = false
+  endpoints.forEach((endpoint) => {
+    if (path.includes(endpoint)) {
+      match = true
+    }
+  })
+  return match
+}
