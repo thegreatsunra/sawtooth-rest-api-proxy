@@ -1,3 +1,4 @@
+const auth = require('basic-auth')
 const express = require('express')
 const expressProxy = require('express-http-proxy')
 const fs = require('fs')
