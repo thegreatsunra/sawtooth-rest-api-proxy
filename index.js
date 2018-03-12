@@ -3,6 +3,7 @@ const expressProxy = require('express-http-proxy')
 const fs = require('fs')
 const helmet = require('helmet')
 const https = require('https')
+const morgan = require('morgan')
 const path = require('path')
 
 const config = require('./config')
@@ -11,6 +12,7 @@ const env = require('./env')
 const app = express()
 
 app.use(helmet())
+app.use(morgan('combined'))
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
