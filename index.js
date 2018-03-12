@@ -15,9 +15,6 @@ app.use(helmet())
 app.use(morgan('combined'))
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
 })
 
 app.use(express.static('public'))
@@ -28,12 +25,23 @@ app.use('/', expressProxy(`${config.api.host}:${config.api.port}`, {
   }
 }))
 
-app.listen(config.proxy.port)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
 
-https.createServer({
-  cert: fs.readFileSync(path.resolve(__dirname, config.proxy.sslCert)),
-  key: fs.readFileSync(path.resolve(__dirname, config.proxy.sslKey))
-}, app).listen(config.proxy.securePort)
+if (env.disableHttps) {
+  app.listen(config.proxy.securePort)
+  console.warn('Warning! Proxy is not secured via HTTPS!\n')
+} else {
+  app.listen(config.proxy.port)
+
+  https.createServer({
+    cert: fs.readFileSync(path.resolve(__dirname, config.proxy.sslCert)),
+    key: fs.readFileSync(path.resolve(__dirname, config.proxy.sslKey))
+  }, app).listen(config.proxy.securePort)
+}
 
 console.log(`Listening for requests at port ${config.proxy.securePort} ...`)
 console.log(`... and forwarding them to ${config.api.host}:${config.api.port}`)
