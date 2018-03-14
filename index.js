@@ -1,4 +1,5 @@
 const auth = require('basic-auth')
+const cors = require('cors')
 const express = require('express')
 const expressProxy = require('express-http-proxy')
 const fs = require('fs')
@@ -15,6 +16,8 @@ const app = express()
 app.use(helmet())
 app.use(morgan('combined'))
 
+app.use(cors())
+
 app.use((req, res, next) => {
   const credentials = auth(req)
   if (credentials === undefined || credentials.name !== env.username || credentials.pass !== env.password) {
@@ -24,13 +27,6 @@ app.use((req, res, next) => {
   } else {
     next()
   }
-})
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
 })
 
 app.use(express.static('public'))
