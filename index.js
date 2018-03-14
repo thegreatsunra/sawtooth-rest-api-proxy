@@ -26,6 +26,12 @@ app.use((req, res, next) => {
   }
 })
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
+
 app.use(express.static('public'))
 
 app.use('/', expressProxy(`${config.api.host}:${config.api.port}`, {
@@ -33,12 +39,6 @@ app.use('/', expressProxy(`${config.api.host}:${config.api.port}`, {
     return proxyRequest(req.path, config.api.endpoints)
   }
 }))
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
-})
 
 if (env.disableHttps) {
   app.listen(config.proxy.securePort)
