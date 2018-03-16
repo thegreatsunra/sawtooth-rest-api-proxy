@@ -22,7 +22,7 @@ app.use((req, res, next) => {
   const credentials = auth(req)
   if (credentials === undefined || credentials.name !== env.username || credentials.pass !== env.password) {
     res.statusCode = 401
-    res.setHeader('WWW-Authenticate', 'Basic realm="MyRealmName"')
+    res.setHeader('WWW-Authenticate', 'Basic realm="SawtoothRestAPIProxy"')
     res.end('Unauthorized')
   } else {
     next()
@@ -39,7 +39,9 @@ app.use('/', expressProxy(sawtoothRestApiUrl, {
 
 if (env.useHttps === false) {
   app.listen(env.proxy.publicPort)
+  console.log('\n========================================')
   console.warn('Warning! Proxy is not secured via HTTPS!')
+  console.log('========================================\n')
 
   console.log(`Listening for requests at port ${env.proxy.publicPort}`)
   console.log(`and forwarding them to http://${sawtoothRestApiUrl}`)
