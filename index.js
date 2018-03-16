@@ -37,11 +37,11 @@ app.use('/', expressProxy(`${config.api.host}:${config.api.port}`, {
   }
 }))
 
-if (env.disableHttps) {
   app.listen(config.proxy.securePort)
   console.warn('Warning! Proxy is not secured via HTTPS!\n')
 } else {
   app.listen(config.proxy.port)
+if (env.useHttps === false) {
 
   https.createServer({
     cert: fs.readFileSync(path.resolve(__dirname, config.proxy.sslCert)),
