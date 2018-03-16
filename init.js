@@ -11,7 +11,7 @@ const app = express()
 const username = random.createWord() + '-' + random.createWord()
 const password = random.createString(24, 'lowercasenumbers')
 
-const output = `USERNAME=${username}\nPASSWORD=${password}\nUSE_HTTPS=false`
+const output = `USERNAME=${username}\nPASSWORD=${password}\nUSE_HTTPS=false\nUSE_BASIC_AUTH=false`
 
 fs.writeFile(path.resolve(__dirname, './.env'), output, (err) => {
   if (err) {
@@ -22,7 +22,6 @@ fs.writeFile(path.resolve(__dirname, './.env'), output, (err) => {
 console.log('Saved a new basic-auth username and password combination to .env\n')
 console.log(`USERNAME:\n${username}\n`)
 console.log(`PASSWORD:\n${password}\n`)
-
 
 app.use(helmet())
 

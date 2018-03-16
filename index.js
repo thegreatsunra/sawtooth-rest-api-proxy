@@ -20,7 +20,7 @@ app.use(cors())
 
 app.use((req, res, next) => {
   const credentials = auth(req)
-  if (credentials === undefined || credentials.name !== env.username || credentials.pass !== env.password) {
+  if ((env.useBasicAuth) && (credentials === undefined || credentials.name !== env.username || credentials.pass !== env.password)) {
     res.statusCode = 401
     res.setHeader('WWW-Authenticate', 'Basic realm="SawtoothRestAPIProxy"')
     res.end('Unauthorized')
@@ -37,7 +37,13 @@ app.use('/', expressProxy(sawtoothRestApiUrl, {
   }
 }))
 
-if (env.useHttps === false) {
+if (!env.useBasicAuth) {
+  console.log('\n=============================================')
+  console.warn('Warning! Proxy is not secured via Basic Auth!')
+  console.log('=============================================\n')
+}
+
+if (!env.useHttps) {
   app.listen(env.proxy.publicPort)
   console.log('\n========================================')
   console.warn('Warning! Proxy is not secured via HTTPS!')
@@ -45,7 +51,6 @@ if (env.useHttps === false) {
 
   console.log(`Listening for requests at port ${env.proxy.publicPort}`)
   console.log(`and forwarding them to http://${sawtoothRestApiUrl}`)
-
 } else {
   app.listen(env.proxy.internalPort)
   https.createServer({

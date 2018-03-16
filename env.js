@@ -6,6 +6,7 @@ dotenv.config()
 const env = {
   username: process.env.USERNAME,
   password: process.env.PASSWORD,
+  useBasicAuth: yn(process.env.USE_BASIC_AUTH) || false,
   useHttps: yn(process.env.USE_HTTPS) || false,
   proxy: {
     initPort: process.env.PROXY_INIT_PORT || 80,
