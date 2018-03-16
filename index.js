@@ -51,7 +51,7 @@ if (env.useHttps === false) {
   https.createServer({
     cert: fs.readFileSync(path.resolve(__dirname, env.proxy.sslCert)),
     key: fs.readFileSync(path.resolve(__dirname, env.proxy.sslKey))
-  }, app).listen(env.proxy.externalPort)
+  }, app).listen(env.proxy.publicPort)
 
   console.log(`Listening for requests at port ${env.proxy.publicPort}`)
   console.log(`and forwarding them to https://${sawtoothRestApiUrl}`)
