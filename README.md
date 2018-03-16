@@ -14,11 +14,11 @@ npm install
 
 ## Install an SSL certificate via certbot
 
-1) If you haven't configured a hostname for your server yet (e.g. `awesome-server.domain.tld` points to your server) do so now. Something like this might work:
+1) If you haven't configured a hostname for your server yet (e.g. `my-awesome-server.my-domain.tld` points to your server) do so now. Something like this might work:
 
 ```bash
 lsattr /etc/hostname && sudo chattr -i /etc/hostname
-sudo sh -c "echo '__YOUR_SERVER_HOSTNAME____' > /etc/hostname"
+sudo sh -c "echo '__YOUR_SERVER_HOSTNAME__' > /etc/hostname"
 sudo hostname -F /etc/hostname
 sudo chattr +i /etc/hostname
 ```
@@ -27,7 +27,7 @@ sudo chattr +i /etc/hostname
 
 3) Make sure port 80 is open on your server (e.g. it isn't being blocked by ufw or another firewall utility)
 
-4) Run the following command, which will start a lightweight static site on your server at port 80
+4) Run the following command. It will generate unique username and password values for basic-auth, save them to a `.env` file, and then start a lightweight static site on your server at port 80
 
 ```bash
 cd sawtooth-rest-api-proxy
@@ -50,7 +50,9 @@ cd ~/sawtooth-rest-api-proxy && sudo certbot certonly --agree-tos --noninteracti
 
 7) If the above command was successful, switch back to your _first_ SSH session and stop the `init.js` script via CTRL+C
 
-8) Run the following commands to put your SSL certificate and key in a place where your proxy app has permission to run it (TODO: Make this smarter and better and more secure)
+8) Make note of the basic-auth username and password generated for your proxy. 
+
+9) Run the following commands to put your SSL certificate and key in a place where your proxy app has permission to run it (TODO: Make this smarter and better and more secure)
 
 ```bash
 ## Copy your SSL key and certificate into your rest api project folder
@@ -61,17 +63,13 @@ sudo cp /etc/letsencrypt/live/__YOUR_SERVER_HOSTNAME__/fullchain.pem ~/sawtooth-
 sudo chown sawtooth:sawtooth ~/sawtooth-rest-api-proxy/sslcert/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem && chmod 755 ~/sawtooth-rest-api-proxy/sslcert/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem
 ```
 
-9) TODO: Set up a cron job to run certbot and renew certificates every 90 days
+10) Open the `.env` file and change the value for `USE_HTTPS` to `true`. Now, whenever you start the proxy, it will look for your SSL certificates and start a secure server at port `8888`.
 
-10) TODO: Set up a cron job to copy renewed certificate and key files to the proxy app folder
+11) While you're in the `.env` file, change the value for `USE_BASIC_AUTH` to `true`. That way, anyone making a request to your proxy will need to provide the username and password in order to successfully connect.
 
-## Configuration
+11) TODO: Set up a cron job to run certbot and renew certificates every 90 days
 
-Edit the values in `config.js` to reflect the URL of your Sawtooth REST API, and the port that you want the proxy to run on.
-
-By default, the proxy listens for requests at port `8888` on the current server and forwards them to `localhost:8008`.
-
-Responses from the Sawtooth REST API are given generous `Access-Control-Allow-Origin` headers by the proxy, and then sent along to the requesting client.
+12) TODO: Set up a cron job to copy renewed certificate and key files to the proxy app folder
 
 ## Usage
 
@@ -80,6 +78,10 @@ cd sawtooth-rest-api-proxy
 
 node index.js
 ```
+
+By default, the proxy listens for requests at port `8888` on the current server and forwards them to `localhost:8008`.
+
+Responses from the Sawtooth REST API are given generous `Access-Control-Allow-Origin` headers by the proxy, and then sent along to the requesting client.
 
 ### Use pm2 to start proxy as a long-running process
 
