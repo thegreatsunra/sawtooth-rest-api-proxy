@@ -1,7 +1,7 @@
 const express = require('express')
 const helmet = require('helmet')
 
-const config = require('./config')
+const env = require('./env')
 
 const app = express()
 
@@ -9,6 +9,6 @@ app.use(helmet())
 
 app.use(express.static('public'))
 
-app.listen(config.proxy.initPort)
+app.listen(env.proxy.initPort)
 
-console.log(`Listening for requests at port ${config.proxy.initPort} ...`)
+console.log(`Listening for requests at port ${env.proxy.initPort} ...`)
