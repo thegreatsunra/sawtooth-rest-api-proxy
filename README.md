@@ -110,3 +110,9 @@ cd sawtooth-rest-api-proxy
 
 pm2 start index.js
 ```
+
+## License
+
+The MIT License (MIT)
+
+Copyright (c) 2018 Dane Petersen
