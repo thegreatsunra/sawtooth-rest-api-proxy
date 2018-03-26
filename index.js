@@ -1,39 +1,66 @@
+const auth = require('basic-auth')
+const cors = require('cors')
 const express = require('express')
 const expressProxy = require('express-http-proxy')
 const fs = require('fs')
 const helmet = require('helmet')
 const https = require('https')
+const morgan = require('morgan')
 const path = require('path')
 
-const config = require('./config')
+const env = require('./env')
 
 const app = express()
 
+const sawtoothRestApiUrl = `${ env.sawtoothRestApi.host }:${ env.sawtoothRestApi.port }`
+
 app.use(helmet())
+app.use(morgan('combined'))
+app.use(cors())
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
+  const credentials = auth(req)
+  if ((env.useBasicAuth) && (credentials === undefined || credentials.name !== env.username || credentials.pass !== env.password)) {
+    res.statusCode = 401
+    res.setHeader('WWW-Authenticate', 'Basic realm="SawtoothRestAPIProxy"')
+    res.end('Unauthorized')
+  } else {
+    next()
+  }
 })
 
 app.use(express.static('public'))
 
-app.use('/', expressProxy(`${config.api.host}:${config.api.port}`, {
+app.use('/', expressProxy(sawtoothRestApiUrl, {
   filter: (req, res) => {
-    return proxyRequest(req.path, config.api.endpoints)
+    return proxyRequest(req.path, env.sawtoothRestApi.endpoints)
   }
 }))
 
-app.listen(config.proxy.port)
+if (!env.useBasicAuth) {
+  console.log('\n=============================================')
+  console.warn('Warning! Proxy is not secured via Basic Auth!')
+  console.log('=============================================\n')
+}
 
-https.createServer({
-  cert: fs.readFileSync(path.resolve(__dirname, config.proxy.sslCert)),
-  key: fs.readFileSync(path.resolve(__dirname, config.proxy.sslKey))
-}, app).listen(config.proxy.securePort)
+if (!env.useHttps) {
+  app.listen(env.proxy.publicPort)
+  console.log('\n========================================')
+  console.warn('Warning! Proxy is not secured via HTTPS!')
+  console.log('========================================\n')
 
-console.log(`Listening for requests at port ${config.proxy.securePort} ...`)
-console.log(`... and forwarding them to ${config.api.host}:${config.api.port}`)
+  console.log(`Listening for requests at port ${env.proxy.publicPort}`)
+  console.log(`and forwarding them to http://${sawtoothRestApiUrl}`)
+} else {
+  app.listen(env.proxy.internalPort)
+  https.createServer({
+    cert: fs.readFileSync(path.resolve(__dirname, env.proxy.sslCert)),
+    key: fs.readFileSync(path.resolve(__dirname, env.proxy.sslKey))
+  }, app).listen(env.proxy.publicPort)
+
+  console.log(`Listening for requests at port ${env.proxy.publicPort}`)
+  console.log(`and forwarding them to https://${sawtoothRestApiUrl}`)
+}
 
 const proxyRequest = (path, endpoints) => {
   let match = false
