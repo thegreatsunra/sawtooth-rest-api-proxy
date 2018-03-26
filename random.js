@@ -1,5 +1,6 @@
 const generate = require('nanoid/generate')
 const randomWords = require('random-words')
+
 const random = {
   createWord() {
     return randomWords()
